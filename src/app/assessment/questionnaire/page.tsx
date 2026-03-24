@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { questionnaireFields } from "@/data/questionnaire";
+import { QuestionSelectField } from "@/components/assessment/question-select-field";
 import type { QuestionnaireAnswers } from "@/types/questionnaire";
 
 type IntakeFormData = {
@@ -99,35 +100,21 @@ export default function QuestionnairePage() {
 
         <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
           {questionnaireFields.map((field) => (
-            <div key={field.id}>
-              <label
-                htmlFor={field.id}
-                className="mb-2 block text-sm font-medium text-white"
-              >
-                {field.label}
-              </label>
-              <select
-                id={field.id}
-                value={answers[field.id]}
-                onChange={(event) =>
-                  setAnswers({
-                    ...answers,
-                    [field.id]: event.target.value,
-                  })
-                }
-                className="w-full rounded-2xl border border-white/15 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-white/30"
-              >
-                <option value="" disabled>
-                  {field.placeholder}
-                </option>
-                {field.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
+  <QuestionSelectField
+    key={field.id}
+    id={field.id}
+    label={field.label}
+    placeholder={field.placeholder}
+    value={answers[field.id]}
+    options={field.options}
+    onChange={(value) =>
+      setAnswers({
+        ...answers,
+        [field.id]: value,
+      })
+    }
+  />
+))}
 
           {errorMessage ? (
             <p className="rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">

@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { QuestionSelectField } from "@/components/assessment/question-select-field";
+import { TextInputField } from "@/components/assessment/text-input-field";
+import { TextareaField } from "@/components/assessment/textarea-field";
 
 type IntakeFormData = {
   name: string;
@@ -75,101 +78,60 @@ export default function IntakePage() {
         </p>
 
         <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label
-              htmlFor="name"
-              className="mb-2 block text-sm font-medium text-white"
-            >
-              First name or nickname
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Enter a name"
-              value={formData.name}
-              onChange={(event) =>
-                setFormData({ ...formData, name: event.target.value })
-              }
-              className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-white placeholder:text-white/35 outline-none transition focus:border-white/30"
-            />
-          </div>
+          <TextInputField
+            id="name"
+            label="First name or nickname"
+            placeholder="Enter a name"
+            value={formData.name}
+            onChange={(value) => setFormData({ ...formData, name: value })}
+          />
 
-          <div>
-            <label
-              htmlFor="stage"
-              className="mb-2 block text-sm font-medium text-white"
-            >
-              Where are you right now?
-            </label>
-            <select
-              id="stage"
-              name="stage"
-              value={formData.stage}
-              onChange={(event) =>
-                setFormData({ ...formData, stage: event.target.value })
-              }
-              className="w-full rounded-2xl border border-white/15 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-white/30"
-            >
-              <option value="" disabled>
-                Select your current stage
-              </option>
-              <option value="high-school">High school student</option>
-              <option value="college">College student</option>
-              <option value="university">University student</option>
-              <option value="early-career">Early career</option>
-              <option value="career-change">Considering a career change</option>
-              <option value="unsure">Not sure</option>
-            </select>
-          </div>
+          <QuestionSelectField
+            id="stage"
+            label="Where are you right now?"
+            placeholder="Select your current stage"
+            value={formData.stage}
+            options={[
+              { value: "high-school", label: "High school student" },
+              { value: "college", label: "College student" },
+              { value: "university", label: "University student" },
+              { value: "early-career", label: "Early career" },
+              {
+                value: "career-change",
+                label: "Considering a career change",
+              },
+              { value: "unsure", label: "Not sure" },
+            ]}
+            onChange={(value) => setFormData({ ...formData, stage: value })}
+          />
 
-          <div>
-            <label
-              htmlFor="goal"
-              className="mb-2 block text-sm font-medium text-white"
-            >
-              What matters most to you right now?
-            </label>
-            <select
-              id="goal"
-              name="goal"
-              value={formData.goal}
-              onChange={(event) =>
-                setFormData({ ...formData, goal: event.target.value })
-              }
-              className="w-full rounded-2xl border border-white/15 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-white/30"
-            >
-              <option value="" disabled>
-                Select your top priority
-              </option>
-              <option value="income">Strong income potential</option>
-              <option value="stability">Job stability</option>
-              <option value="interest">Finding something I enjoy</option>
-              <option value="balance">Work-life balance</option>
-              <option value="impact">Helping people / making an impact</option>
-              <option value="growth">Long-term career growth</option>
-            </select>
-          </div>
+          <QuestionSelectField
+            id="goal"
+            label="What matters most to you right now?"
+            placeholder="Select your top priority"
+            value={formData.goal}
+            options={[
+              { value: "income", label: "Strong income potential" },
+              { value: "stability", label: "Job stability" },
+              { value: "interest", label: "Finding something I enjoy" },
+              { value: "balance", label: "Work-life balance" },
+              {
+                value: "impact",
+                label: "Helping people / making an impact",
+              },
+              { value: "growth", label: "Long-term career growth" },
+            ]}
+            onChange={(value) => setFormData({ ...formData, goal: value })}
+          />
 
-          <div>
-            <label
-              htmlFor="notes"
-              className="mb-2 block text-sm font-medium text-white"
-            >
-              Anything else you want Vura to consider?
-            </label>
-            <textarea
-              id="notes"
-              name="notes"
-              rows={4}
-              placeholder="Optional: interests, constraints, concerns, or goals"
-              value={formData.notes}
-              onChange={(event) =>
-                setFormData({ ...formData, notes: event.target.value })
-              }
-              className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-white placeholder:text-white/35 outline-none transition focus:border-white/30"
-            />
-          </div>
+          <TextareaField
+            id="notes"
+            label="Anything else you want Vura to consider?"
+            placeholder="Optional: interests, constraints, concerns, or goals"
+            value={formData.notes}
+            rows={4}
+            onChange={(value) => setFormData({ ...formData, notes: value })}
+          />
 
           {errorMessage ? (
             <p className="rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
