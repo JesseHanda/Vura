@@ -3,19 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { questionnaireFields } from "@/data/questionnaire";
+import type { QuestionnaireAnswers } from "@/types/questionnaire";
 
 type IntakeFormData = {
   name: string;
   stage: string;
   goal: string;
   notes: string;
-};
-
-type QuestionnaireAnswers = {
-  interests: string;
-  workStyle: string;
-  educationLevel: string;
-  peopleOrientation: string;
 };
 
 export default function QuestionnairePage() {
@@ -43,12 +38,9 @@ export default function QuestionnairePage() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (
-      !answers.interests ||
-      !answers.workStyle ||
-      !answers.educationLevel ||
-      !answers.peopleOrientation
-    ) {
+    const hasMissingAnswer = Object.values(answers).some((value) => !value);
+
+    if (hasMissingAnswer) {
       setErrorMessage("Please answer all questionnaire fields before continuing.");
       return;
     }
@@ -68,7 +60,7 @@ export default function QuestionnairePage() {
         </span>
 
         <h1 className="max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">
-          Next, let’s learn how you like to work.
+          Next, let&apos;s learn how you like to work.
         </h1>
 
         <p className="mt-6 max-w-2xl text-base leading-7 text-white/70 sm:text-lg">
@@ -106,120 +98,36 @@ export default function QuestionnairePage() {
         </div>
 
         <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label
-              htmlFor="interests"
-              className="mb-2 block text-sm font-medium text-white"
-            >
-              Which area sounds most interesting to you right now?
-            </label>
-            <select
-              id="interests"
-              value={answers.interests}
-              onChange={(event) =>
-                setAnswers({ ...answers, interests: event.target.value })
-              }
-              className="w-full rounded-2xl border border-white/15 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-white/30"
-            >
-              <option value="" disabled>
-                Select one
-              </option>
-              <option value="technology">Technology and software</option>
-              <option value="health">Health and healthcare</option>
-              <option value="business">Business and finance</option>
-              <option value="creative">Creative and design work</option>
-              <option value="skilled-trades">Skilled trades and hands-on work</option>
-              <option value="science">Science and research</option>
-              <option value="education">Education and helping others learn</option>
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="workStyle"
-              className="mb-2 block text-sm font-medium text-white"
-            >
-              What kind of work environment do you prefer?
-            </label>
-            <select
-              id="workStyle"
-              value={answers.workStyle}
-              onChange={(event) =>
-                setAnswers({ ...answers, workStyle: event.target.value })
-              }
-              className="w-full rounded-2xl border border-white/15 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-white/30"
-            >
-              <option value="" disabled>
-                Select one
-              </option>
-              <option value="structured">Structured and predictable</option>
-              <option value="flexible">Flexible and varied</option>
-              <option value="independent">Mostly independent</option>
-              <option value="collaborative">Highly collaborative</option>
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="educationLevel"
-              className="mb-2 block text-sm font-medium text-white"
-            >
-              How much additional education or training are you open to?
-            </label>
-            <select
-              id="educationLevel"
-              value={answers.educationLevel}
-              onChange={(event) =>
-                setAnswers({ ...answers, educationLevel: event.target.value })
-              }
-              className="w-full rounded-2xl border border-white/15 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-white/30"
-            >
-              <option value="" disabled>
-                Select one
-              </option>
-              <option value="minimal">As little as possible</option>
-              <option value="short">Short certification or diploma</option>
-              <option value="college-university">
-                College or university is fine
-              </option>
-              <option value="extended">
-                I am open to longer training if the fit is right
-              </option>
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="peopleOrientation"
-              className="mb-2 block text-sm font-medium text-white"
-            >
-              Which sounds more like you?
-            </label>
-            <select
-              id="peopleOrientation"
-              value={answers.peopleOrientation}
-              onChange={(event) =>
-                setAnswers({
-                  ...answers,
-                  peopleOrientation: event.target.value,
-                })
-              }
-              className="w-full rounded-2xl border border-white/15 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-white/30"
-            >
-              <option value="" disabled>
-                Select one
-              </option>
-              <option value="people-focused">
-                I enjoy working closely with people
-              </option>
-              <option value="balanced">
-                I like a balance of people and solo work
-              </option>
-              <option value="independent">
-                I prefer mostly independent work
-              </option>
-            </select>
-          </div>
+          {questionnaireFields.map((field) => (
+            <div key={field.id}>
+              <label
+                htmlFor={field.id}
+                className="mb-2 block text-sm font-medium text-white"
+              >
+                {field.label}
+              </label>
+              <select
+                id={field.id}
+                value={answers[field.id]}
+                onChange={(event) =>
+                  setAnswers({
+                    ...answers,
+                    [field.id]: event.target.value,
+                  })
+                }
+                className="w-full rounded-2xl border border-white/15 bg-slate-900 px-4 py-3 text-white outline-none transition focus:border-white/30"
+              >
+                <option value="" disabled>
+                  {field.placeholder}
+                </option>
+                {field.options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
 
           {errorMessage ? (
             <p className="rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
