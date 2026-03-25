@@ -7,12 +7,8 @@ import { QuestionSelectField } from "@/components/assessment/question-select-fie
 import { TextInputField } from "@/components/assessment/text-input-field";
 import { TextareaField } from "@/components/assessment/textarea-field";
 
-type IntakeFormData = {
-  name: string;
-  stage: string;
-  goal: string;
-  notes: string;
-};
+import { goalOptions, stageOptions } from "@/data/intake";
+import type { IntakeFormData } from "@/types/intake";
 
 function isValidName(name: string) {
   const trimmedName = name.trim();
@@ -91,17 +87,7 @@ export default function IntakePage() {
             label="Where are you right now?"
             placeholder="Select your current stage"
             value={formData.stage}
-            options={[
-              { value: "high-school", label: "High school student" },
-              { value: "college", label: "College student" },
-              { value: "university", label: "University student" },
-              { value: "early-career", label: "Early career" },
-              {
-                value: "career-change",
-                label: "Considering a career change",
-              },
-              { value: "unsure", label: "Not sure" },
-            ]}
+            options={stageOptions}
             onChange={(value) => setFormData({ ...formData, stage: value })}
           />
 
@@ -110,17 +96,7 @@ export default function IntakePage() {
             label="What matters most to you right now?"
             placeholder="Select your top priority"
             value={formData.goal}
-            options={[
-              { value: "income", label: "Strong income potential" },
-              { value: "stability", label: "Job stability" },
-              { value: "interest", label: "Finding something I enjoy" },
-              { value: "balance", label: "Work-life balance" },
-              {
-                value: "impact",
-                label: "Helping people / making an impact",
-              },
-              { value: "growth", label: "Long-term career growth" },
-            ]}
+            options={goalOptions}
             onChange={(value) => setFormData({ ...formData, goal: value })}
           />
 

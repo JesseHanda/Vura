@@ -69,3 +69,16 @@ export const questionnaireFields: QuestionnaireField[] = [
     ],
   },
 ];
+
+export function getQuestionnaireOptionLabel(
+  fieldId: QuestionnaireField["id"],
+  value: string,
+) {
+  const field = questionnaireFields.find((item) => item.id === fieldId);
+
+  if (!field) {
+    return value;
+  }
+
+  return field.options.find((option) => option.value === value)?.label ?? value;
+}
